@@ -1,4 +1,4 @@
-package com.example.mymovies.utils;
+package com.release.mymovies.utils;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.loader.content.AsyncTaskLoader;
 
-import com.example.mymovies.MainActivity;
+import com.release.mymovies.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +36,6 @@ public class NetworkUtils {
     private static final String PARAMS_MIN_VOTE_COUNT = "vote_count.gte";
 
     private static final String API_KEY = "cd13d25e707fedec6df80ea235a078fb";
-    private static final String LANGUAGE = "ru-RU";
     private static final String SORT_BY_POPULARITY = "popularity.desc";
     private static final String SORT_BY_RATING = "vote_average.desc";
     private static final String MIN_VOTE_COUNT_VALUE = "1000";
@@ -45,10 +44,10 @@ public class NetworkUtils {
     public static final int RATING = 1;
 
 
-    public static URL getUrlToVideoJson (int id) {
+    public static URL getUrlToVideoJson(int id, String lang) {
         Uri uri = Uri.parse(String.format(BASE_URL_VIDEO, id)).buildUpon().
                 appendQueryParameter(PARAMS_API_KEY, API_KEY).
-                appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE).build();
+                appendQueryParameter(PARAMS_LANGUAGE, lang).build();
         URL urlToVideoJson = null;
         try {
             urlToVideoJson = new URL(uri.toString());
@@ -58,8 +57,9 @@ public class NetworkUtils {
         return urlToVideoJson;
     }
 
-    public static URL getUrlToReviewJson (int id) {
+    public static URL getUrlToReviewJson(int id, String lang) {
         Uri uri = Uri.parse(String.format(BASE_URL_REVIEW, id)).buildUpon().
+                appendQueryParameter(PARAMS_LANGUAGE, lang).
                 appendQueryParameter(PARAMS_API_KEY, API_KEY).build();
         URL urlToReviewJson = null;
         try {
@@ -70,7 +70,7 @@ public class NetworkUtils {
         return urlToReviewJson;
     }
 
-    public static URL getUrlToJson(int page, int sortBy) {
+    public static URL getUrlToJson(int page, int sortBy, String lang) {
         String sortByString;
         if (sortBy == POPULARITY)
             sortByString = SORT_BY_POPULARITY;
@@ -80,7 +80,7 @@ public class NetworkUtils {
             throw new IllegalArgumentException("No variant of sort with this value");
         Uri uri = Uri.parse(BASE_URL).buildUpon().
                 appendQueryParameter(PARAMS_API_KEY, API_KEY).
-                appendQueryParameter(PARAMS_LANGUAGE, LANGUAGE).
+                appendQueryParameter(PARAMS_LANGUAGE, lang).
                 appendQueryParameter(PARAMS_PAGE, Integer.toString(page)).
                 appendQueryParameter(PARAMS_MIN_VOTE_COUNT, MIN_VOTE_COUNT_VALUE).
                 appendQueryParameter(PARAMS_SORT_BY, sortByString).build();
@@ -93,11 +93,11 @@ public class NetworkUtils {
         return urlToJson;
     }
 
-    public static JSONObject getJsonObject(int page, int sortBy) {
+    public static JSONObject getJsonObject(int page, int sortBy, String lang) {
         DownloadJsonTask downloadJsonTask = new DownloadJsonTask();
         JSONObject jsonObject = null;
         try {
-            jsonObject = downloadJsonTask.execute(getUrlToJson(page, sortBy)).get();
+            jsonObject = downloadJsonTask.execute(getUrlToJson(page, sortBy, lang)).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -196,11 +196,11 @@ public class NetworkUtils {
         }
     }
 
-    public static JSONObject getJsonObjectVideo(int movieId) {
+    public static JSONObject getJsonObjectVideo(int movieId, String lang) {
         DownloadJsonTask downloadJsonTask = new DownloadJsonTask();
         JSONObject jsonObject = null;
         try {
-            jsonObject = downloadJsonTask.execute(getUrlToVideoJson(movieId)).get();
+            jsonObject = downloadJsonTask.execute(getUrlToVideoJson(movieId, lang)).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -209,11 +209,11 @@ public class NetworkUtils {
         return jsonObject;
     }
 
-    public static JSONObject getJsonObjectReview(int movieId) {
+    public static JSONObject getJsonObjectReview(int movieId, String lang) {
         DownloadJsonTask downloadJsonTask = new DownloadJsonTask();
         JSONObject jsonObject = null;
         try {
-            jsonObject = downloadJsonTask.execute(getUrlToReviewJson(movieId)).get();
+            jsonObject = downloadJsonTask.execute(getUrlToReviewJson(movieId, lang)).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

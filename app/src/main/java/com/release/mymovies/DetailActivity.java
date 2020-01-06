@@ -1,16 +1,17 @@
-package com.example.mymovies;
+package com.release.mymovies;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,20 +21,23 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mymovies.adapters.ReviewAdapter;
-import com.example.mymovies.adapters.TrailerAdapter;
-import com.example.mymovies.data.FavoriteMovie;
-import com.example.mymovies.data.MainViewModel;
-import com.example.mymovies.data.Movie;
-import com.example.mymovies.data.Review;
-import com.example.mymovies.data.Trailer;
-import com.example.mymovies.utils.JsonUtils;
-import com.example.mymovies.utils.NetworkUtils;
+import com.release.mymovies.adapters.ReviewAdapter;
+import com.release.mymovies.adapters.TrailerAdapter;
+import com.release.mymovies.data.FavoriteMovie;
+import com.release.mymovies.data.MainViewModel;
+import com.release.mymovies.data.Movie;
+import com.release.mymovies.data.Review;
+import com.release.mymovies.data.Trailer;
+import com.release.mymovies.utils.JsonUtils;
+import com.release.mymovies.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
+
+import jp.wasabeef.picasso.transformations.ColorFilterTransformation;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -53,13 +57,13 @@ public class DetailActivity extends AppCompatActivity {
     private Movie movie;
     private MainViewModel viewModel;
     private int movieId;
-    private FavoriteMovie favoriteMovie;
-
+    private static String lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        lang = Locale.getDefault().getLanguage();
         imageViewBigPoster = findViewById(R.id.imageViewBigPoster);
         imageViewAddToFavorite = findViewById(R.id.imageViewAddToFavorite);
         textViewTitle = findViewById(R.id.textViewTitle);
@@ -71,12 +75,18 @@ public class DetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         movieId = -1;
-        if (intent != null && intent.hasExtra(MainActivity.INTENT_MOVIE_ID))
+        if (intent != null && intent.hasExtra(MainActivity.INTENT_MOVIE_ID)
+                && intent.hasExtra(MainActivity.INTENT_ACTIVITY_FROM)) {
             movieId = intent.getIntExtra(MainActivity.INTENT_MOVIE_ID, -1);
-        else
+            int activityFrom = intent.getIntExtra(MainActivity.INTENT_ACTIVITY_FROM, -1);
+            if (activityFrom == MainActivity.FROM_MAIN_ACTIVITY)
+                movie = viewModel.getMovieById(movieId);
+            else if (activityFrom == FavoriteActivity.FROM_FAVORITE_ACTIVITY)
+                movie = viewModel.getFavoriteMovieById(movieId);
+            else
+                throw new IllegalArgumentException("Illegal argument of intent from activity");
+        } else
             finish();
-        if (movieId >= 0)
-            movie = viewModel.getMovieById(movieId);
         setMovieToViews();
         setFavorite();
         recyclerViewTrailers = findViewById(R.id.recyclerViewTrailers);
@@ -95,21 +105,50 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
         ArrayList<Trailer> trailers =
-                JsonUtils.getTrailersFromJsonObject(NetworkUtils.getJsonObjectVideo(movie.getId()));
+                JsonUtils.getTrailersFromJsonObject(NetworkUtils.getJsonObjectVideo(movie.getId(), lang));
         ArrayList<Review> reviews =
-                JsonUtils.getReviewsFromJsonObject(NetworkUtils.getJsonObjectReview(movie.getId()));
+                JsonUtils.getReviewsFromJsonObject(NetworkUtils.getJsonObjectReview(movie.getId(), lang));
         reviewAdapter.setReviews(reviews);
         trailerAdapter.setTrailers(trailers);
-        scrollViewMovieInfo.smoothScrollTo(0,0);
+        scrollViewMovieInfo.smoothScrollTo(0, 0);
     }
 
     private void setMovieToViews() {
-        Picasso.get().load(movie.getBigPosterPath()).into(imageViewBigPoster);
+        Picasso.get().load(movie.getBigPosterPath()).placeholder(R.drawable.placeholder_big_poster)
+                .into(imageViewBigPoster);
+        Bitmap bitmapBackground = null;
+        try {
+            bitmapBackground = new DownloadBackgroundBitmap().execute(movie).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (bitmapBackground != null)
+            scrollViewMovieInfo.setBackground(new BitmapDrawable(getResources(), bitmapBackground));
+        else
+            scrollViewMovieInfo.setBackground(getResources().getDrawable(R.drawable.placeholder_background));
         textViewTitle.setText(movie.getTitle());
         textViewOriginalTitle.setText(movie.getOriginalTitle());
         textViewRating.setText(String.valueOf(movie.getRating()));
         textViewReleaseDate.setText(movie.getReleaseDate());
         textViewOverview.setText(movie.getOverview());
+    }
+
+    private static class DownloadBackgroundBitmap extends AsyncTask<Movie, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(Movie... movies) {
+            Bitmap bitmap = null;
+            if (movies != null && movies.length > 0) {
+                try {
+                    bitmap = Picasso.get().load(movies[0].getBackdropPath()).
+                            transform(new ColorFilterTransformation(R.color.background_color)).get();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return bitmap;
+        }
     }
 
     public void onClickAddToFavorite(View view) {

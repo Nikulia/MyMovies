@@ -1,16 +1,17 @@
 <resources>
     <string name="app_name">My Movies</string>
-    <string name="poster_of_movie">Постер фильма</string>
-    <string name="the_most_popularity">Наиболее популярные</string>
-    <string name="the_top_rated">Самые рейтинговые</string>
-    <string name="title_of_movie">Название:</string>
-    <string name="original_title_of_movie">Оригинальное название:</string>
-    <string name="rating_of_movie">Рейтинг:</string>
-    <string name="description_of_movie">Описание:</string>
-    <string name="release_date_of_movie">Дата релиза:</string>
-    <string name="add_to_favorite">Добавлено в избранное</string>
-    <string name="delete_from_favorite">Удалено из избранного</string>
-    <string name="item_main">Главная</string>
-    <string name="item_favorite">Избранное</string>
-    <string name="play_the_trailer">Запустить трейлер</string>
+    <string name="poster_of_movie">Poster of movie</string>
+    <string name="the_most_popularity">Most popular</string>
+    <string name="the_top_rated">Top rated</string>
+    <string name="title_of_movie">Title:</string>
+    <string name="original_title_of_movie">Original title:</string>
+    <string name="rating_of_movie">Rating:</string>
+    <string name="description_of_movie">Description:</string>
+    <string name="release_date_of_movie">Realise date:</string>
+    <string name="add_to_favorite">Added to favorite</string>
+    <string name="delete_from_favorite">Deleted from favorite</string>
+    <string name="item_main">Main</string>
+    <string name="item_favorite">Favorite</string>
+    <string name="play_the_trailer">Start trailer</string>
+    <string name="description_image_favorite">Badge add to/delete from favorite</string>
 </resources>

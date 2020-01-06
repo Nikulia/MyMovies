@@ -1,8 +1,8 @@
-package com.example.mymovies.utils;
+package com.release.mymovies.utils;
 
-import com.example.mymovies.data.Movie;
-import com.example.mymovies.data.Review;
-import com.example.mymovies.data.Trailer;
+import com.release.mymovies.data.Movie;
+import com.release.mymovies.data.Review;
+import com.release.mymovies.data.Trailer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,7 +58,8 @@ public class JsonUtils {
                         jsonObjectMovie.getString(ATTRIBUTE_POSTER_PATH);
                 String bigPosterPath = BASE_POSTER_URL + BIG_POSTER_SIZE +
                         jsonObjectMovie.getString(ATTRIBUTE_POSTER_PATH);
-                String backdropPath = jsonObjectMovie.getString(ATTRIBUTE_BACKDROP_PATH);
+                String backdropPath = BASE_POSTER_URL + BIG_POSTER_SIZE +
+                        jsonObjectMovie.getString(ATTRIBUTE_BACKDROP_PATH);
                 Movie movie = new Movie(id, voteCount, title, originalTitle, overview, releaseDate, rating,
                         smallPosterPath, bigPosterPath, backdropPath);
                 movies.add(movie);
@@ -69,7 +70,7 @@ public class JsonUtils {
         return movies;
     }
 
-    public static ArrayList<Review> getReviewsFromJsonObject (JSONObject jsonObject) {
+    public static ArrayList<Review> getReviewsFromJsonObject(JSONObject jsonObject) {
         ArrayList<Review> reviews = new ArrayList<>();
         if (jsonObject == null)
             return reviews;
@@ -88,7 +89,7 @@ public class JsonUtils {
         return reviews;
     }
 
-    public static ArrayList<Trailer> getTrailersFromJsonObject (JSONObject jsonObject) {
+    public static ArrayList<Trailer> getTrailersFromJsonObject(JSONObject jsonObject) {
         ArrayList<Trailer> trailers = new ArrayList<>();
         if (jsonObject == null)
             return trailers;

@@ -1,4 +1,4 @@
-package com.example.mymovies.adapters;
+package com.release.mymovies.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mymovies.R;
-import com.example.mymovies.data.Movie;
-import com.example.mymovies.utils.JsonUtils;
+import com.release.mymovies.R;
+import com.release.mymovies.data.Movie;
+import com.release.mymovies.utils.JsonUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,9 +22,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     private OnPosterClickListener onPosterClickListener;
     private OnReachEndListener onReachEndListener;
 
+
     public MovieAdapter() {
         this.movies = new ArrayList<>();
     }
+
 
     public interface OnPosterClickListener {
         void onPosterClick(int position);
@@ -52,7 +54,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     @Override
     public void onBindViewHolder(@NonNull MovieViewHolder holder, int position) {
         if (isReachEnd(position) && onReachEndListener != null)
-        onReachEndListener.onReachEnd();
+            onReachEndListener.onReachEnd();
         Movie movie = movies.get(position);
         Picasso.get().load(movie.getSmallPosterPath()).into(holder.imageViewSmallPoster);
     }
@@ -84,7 +86,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     }
 
-    public void setMovies (List<Movie> movies) {
+    public void setMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }
@@ -93,17 +95,17 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies;
     }
 
-    public void addMovie (Movie movie) {
+    public void addMovie(Movie movie) {
         movies.add(movie);
         notifyDataSetChanged();
     }
 
-    public void clear () {
+    public void clear() {
         movies.clear();
         notifyDataSetChanged();
     }
 
-    public void addMoviesToList (List<Movie> movies) {
+    public void addMoviesToList(List<Movie> movies) {
         this.movies.addAll(movies);
         notifyDataSetChanged();
     }

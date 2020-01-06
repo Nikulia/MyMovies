@@ -9,8 +9,9 @@
     <ImageView
         android:id="@+id/imageViewBigPoster"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="@dimen/zero"
         android:adjustViewBounds="true"
+        android:contentDescription="@string/poster_of_movie"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,8 +21,9 @@
         android:id="@+id/imageViewAddToFavorite"
         android:layout_width="@dimen/image_favorite_small_dimension"
         android:layout_height="@dimen/image_favorite_small_dimension"
-        android:layout_marginEnd="@dimen/margin_favorite_image"
         android:layout_marginTop="@dimen/margin_favorite_image"
+        android:layout_marginEnd="@dimen/margin_favorite_image"
+        android:contentDescription="@string/description_image_favorite"
         android:onClick="onClickAddToFavorite"
         app:layout_constraintEnd_toEndOf="@id/imageViewBigPoster"
         app:layout_constraintTop_toTopOf="@+id/imageViewBigPoster"
@@ -29,8 +31,8 @@
 
     <ScrollView
         android:id="@+id/scrollViewMovieInfo"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/zero"
+        android:layout_height="@dimen/zero"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/imageViewBigPoster"
@@ -40,7 +42,7 @@
             android:id="@+id/movieInfo"
             layout="@layout/movie_info"
             android:layout_width="match_parent"
-            android:layout_height="0dp" />
+            android:layout_height="@dimen/zero" />
 
     </ScrollView>
 

@@ -1,4 +1,4 @@
-package com.example.mymovies.data;
+package com.release.mymovies.data;
 
 import android.app.Application;
 import android.os.AsyncTask;
@@ -26,7 +26,7 @@ public class MainViewModel extends AndroidViewModel {
     public Movie getMovieById(int id) {
         Movie movie = null;
         try {
-            movie =  new GetMovieTask().execute(id).get();
+            movie = new GetMovieTask().execute(id).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -66,7 +66,7 @@ public class MainViewModel extends AndroidViewModel {
     public FavoriteMovie getFavoriteMovieById(int id) {
         FavoriteMovie movie = null;
         try {
-            movie =  new GetFavoriteMovieTask().execute(id).get();
+            movie = new GetFavoriteMovieTask().execute(id).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

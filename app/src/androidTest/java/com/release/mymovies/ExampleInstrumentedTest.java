@@ -1,4 +1,4 @@
-package com.example.mymovies;
+package com.release.mymovies;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.example.mymovies", appContext.getPackageName());
+        assertEquals("com.release.mymovies", appContext.getPackageName());
     }
 }

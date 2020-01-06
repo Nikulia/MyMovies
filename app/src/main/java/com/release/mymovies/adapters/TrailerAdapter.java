@@ -1,4 +1,4 @@
-package com.example.mymovies.adapters;
+package com.release.mymovies.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mymovies.R;
-import com.example.mymovies.data.Trailer;
+import com.release.mymovies.R;
+import com.release.mymovies.data.Trailer;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
     private OnTrailerClickListener onTrailerClickListener;
 
     public interface OnTrailerClickListener {
-        void onTrailerClick (String url);
+        void onTrailerClick(String url);
     }
 
     public void setOnTrailerClickListener(OnTrailerClickListener onTrailerClickListener) {

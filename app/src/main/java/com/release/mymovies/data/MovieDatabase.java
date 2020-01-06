@@ -1,4 +1,4 @@
-package com.example.mymovies.data;
+package com.release.mymovies.data;
 
 import android.content.Context;
 
@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Movie.class, FavoriteMovie.class}, version = 4, exportSchema = false)
+@Database(entities = {Movie.class, FavoriteMovie.class}, version = 7, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
     private static MovieDatabase database;
     private static final Object LOCK = new Object();
@@ -20,5 +20,6 @@ public abstract class MovieDatabase extends RoomDatabase {
             return database;
         }
     }
+
     public abstract MovieDao movieDao();
 }

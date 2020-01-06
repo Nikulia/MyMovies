@@ -1,23 +1,20 @@
-package com.example.mymovies;
+package com.release.mymovies;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,24 +23,26 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.mymovies.adapters.MovieAdapter;
-import com.example.mymovies.data.MainViewModel;
-import com.example.mymovies.data.Movie;
-import com.example.mymovies.utils.JsonUtils;
-import com.example.mymovies.utils.NetworkUtils;
+import com.release.mymovies.adapters.MovieAdapter;
+import com.release.mymovies.data.MainViewModel;
+import com.release.mymovies.data.Movie;
+import com.release.mymovies.utils.JsonUtils;
+import com.release.mymovies.utils.NetworkUtils;
 
 import org.json.JSONObject;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<JSONObject> {
 
     public static final String INTENT_MOVIE_ID = "movieId";
+    public static final String INTENT_ACTIVITY_FROM = "activity";
+    public static final int FROM_MAIN_ACTIVITY = 0;
     public static final String BUNDLE_ATTRIBUTE_URL = "url";
+    public static final String BUNDLE_RECYCLER_VIEW_POSITION = "recyclerView's position";
     private RecyclerView recyclerViewPosters;
     private MovieAdapter movieAdapter;
     private Switch switchSort;
@@ -51,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private TextView textViewPopularity;
     private MainViewModel viewModel;
     private ProgressBar progressBarDownload;
+    private int recyclerViewSavedPosition = 0;
 
     private static final int LOADER_ID = 122;
     private LoaderManager loaderManager;
@@ -58,11 +58,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static int page = 1;
     private static int methodOfSort;
     private static boolean isLoading = false;
+    private static String lang;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        lang = Locale.getDefault().getLanguage();
         loaderManager = LoaderManager.getInstance(this);
         viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         switchSort = findViewById(R.id.switchSort);
@@ -71,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         recyclerViewPosters = findViewById(R.id.resyclerViewPosters);
         recyclerViewPosters.setLayoutManager(new GridLayoutManager(this, getCountOfColumns(this)));
         progressBarDownload = findViewById(R.id.progressBarDownload);
+        if (savedInstanceState != null) {
+            recyclerViewSavedPosition = savedInstanceState.getInt(BUNDLE_RECYCLER_VIEW_POSITION);
+        }
         movieAdapter = new MovieAdapter();
         recyclerViewPosters.setAdapter(movieAdapter);
         switchSort.setChecked(true);
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Movie movie = movieAdapter.getMovies().get(position);
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                 intent.putExtra(INTENT_MOVIE_ID, movie.getId());
+                intent.putExtra(INTENT_ACTIVITY_FROM, FROM_MAIN_ACTIVITY);
                 startActivity(intent);
             }
         });
@@ -95,9 +101,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onReachEnd() {
                 if (!isLoading)
-                    downloadData(page, methodOfSort);
+                    downloadData(page, methodOfSort, lang);
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(BUNDLE_RECYCLER_VIEW_POSITION,
+                ((LinearLayoutManager) recyclerViewPosters.getLayoutManager()).findLastVisibleItemPosition());
     }
 
     public static int getCountOfColumns(Activity activity) {
@@ -137,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             textViewPopularity.setTextColor(getResources().getColor(R.color.colorAccent));
             textViewRating.setTextColor(getResources().getColor(R.color.white));
         }
-        downloadData(page, methodOfSort);
+        downloadData(page, methodOfSort, lang);
     }
 
     public void onClickPopularity(View view) {
@@ -150,8 +163,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         switchSort.setChecked(true);
     }
 
-    public void downloadData(int page, int methodOfSort) {
-        URL url = NetworkUtils.getUrlToJson(page, methodOfSort);
+    public void downloadData(int page, int methodOfSort, String lang) {
+        URL url = NetworkUtils.getUrlToJson(page, methodOfSort, lang);
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_ATTRIBUTE_URL, url.toString());
         loaderManager.restartLoader(LOADER_ID, bundle, this);
@@ -178,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (page == 1) {
                 viewModel.deleteAllMovies();
                 movieAdapter.clear();
+                recyclerViewPosters.scrollToPosition(0);
             }
             for (Movie movie : movies)
                 viewModel.insertMovie(movie);
@@ -196,6 +210,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         isLoading = false;
         progressBarDownload.setVisibility(View.INVISIBLE);
         loaderManager.destroyLoader(LOADER_ID);
+        if (recyclerViewSavedPosition > movieAdapter.getMovies().size() - 1) {
+            downloadData(page, methodOfSort, lang);
+        }
+        if (recyclerViewSavedPosition > 0 &&
+                recyclerViewSavedPosition <= movieAdapter.getMovies().size() - 1) {
+            recyclerViewPosters.getLayoutManager().scrollToPosition(recyclerViewSavedPosition);
+            recyclerViewSavedPosition = 0;
+        }
     }
 
     @Override

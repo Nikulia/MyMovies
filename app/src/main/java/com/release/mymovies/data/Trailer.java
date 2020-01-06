@@ -1,4 +1,4 @@
-package com.example.mymovies.data;
+package com.release.mymovies.data;
 
 public class Trailer {
 
