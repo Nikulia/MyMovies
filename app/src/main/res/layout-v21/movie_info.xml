@@ -11,7 +11,7 @@
         android:layout_marginStart="@dimen/margin"
         android:layout_marginTop="@dimen/margin"
         android:text="@string/title_of_movie"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +27,7 @@
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
         android:layout_marginStart="@dimen/margin"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         android:text="@string/original_title_of_movie"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
@@ -48,7 +48,7 @@
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
         android:layout_marginStart="@dimen/margin"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         android:text="@string/rating_of_movie"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle" />
@@ -69,7 +69,7 @@
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textViewOriginalTitle" />
@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
         android:layout_marginStart="@dimen/margin"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         android:text="@string/description_of_movie"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewReleaseDate" />
@@ -90,9 +90,8 @@
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/textViewReleaseDate" />
 
@@ -102,7 +101,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
         android:layout_marginStart="@dimen/margin"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         android:text="@string/release_date_of_movie"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewRating" />
@@ -111,7 +110,7 @@
         android:id="@+id/textViewReleaseDate"
         android:layout_width="@dimen/zero"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        style="@style/MovieInfoTextStyle"
         android:layout_marginTop="@dimen/margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"

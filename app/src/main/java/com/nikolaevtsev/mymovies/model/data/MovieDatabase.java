@@ -1,4 +1,4 @@
-package com.release.mymovies.data;
+package com.nikolaevtsev.mymovies.model.data;
 
 import android.content.Context;
 
@@ -6,7 +6,10 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {Movie.class, FavoriteMovie.class}, version = 7, exportSchema = false)
+import com.nikolaevtsev.mymovies.model.pojo.FavoriteMovie;
+import com.nikolaevtsev.mymovies.model.pojo.Movie;
+
+@Database(entities = {Movie.class, FavoriteMovie.class}, version = 9, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
     private static MovieDatabase database;
     private static final Object LOCK = new Object();

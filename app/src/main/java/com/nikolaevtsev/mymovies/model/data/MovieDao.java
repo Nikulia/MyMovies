@@ -1,10 +1,13 @@
-package com.release.mymovies.data;
+package com.nikolaevtsev.mymovies.model.data;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import com.nikolaevtsev.mymovies.model.pojo.FavoriteMovie;
+import com.nikolaevtsev.mymovies.model.pojo.Movie;
 
 import java.util.List;
 
@@ -16,23 +19,20 @@ public interface MovieDao {
     @Query("SELECT * FROM favorite_movies")
     LiveData<List<FavoriteMovie>> getAllFavoriteMovies();
 
-    @Query("SELECT * FROM movies WHERE id == :movieId")
+    @Query("SELECT * FROM movies WHERE movieId == :movieId")
     Movie getMovieById(int movieId);
 
-    @Query("SELECT * FROM favorite_movies WHERE id == :movieId")
+    @Query("SELECT * FROM favorite_movies WHERE movieId == :movieId")
     FavoriteMovie getFavoriteMovieById(int movieId);
 
     @Query("DELETE FROM movies")
     void deleteAllMovies();
 
     @Insert
-    void insertMovie(Movie movie);
+    void insertMovies(List<Movie> movies);
 
     @Insert
     void insertFavoriteMovie(FavoriteMovie favoriteMovie);
-
-    @Delete
-    void deleteMovie(Movie movie);
 
     @Delete
     void deleteFavoriteMovie(FavoriteMovie favoriteMovie);

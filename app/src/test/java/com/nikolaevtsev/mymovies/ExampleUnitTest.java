@@ -1,4 +1,4 @@
-package com.release.mymovies;
+package com.nikolaevtsev.mymovies;
 
 import org.junit.Test;
 

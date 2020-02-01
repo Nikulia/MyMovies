@@ -1,5 +1,6 @@
-package com.release.mymovies.adapters;
+package com.nikolaevtsev.mymovies.view.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,9 +9,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.release.mymovies.R;
-import com.release.mymovies.data.Movie;
-import com.release.mymovies.utils.JsonUtils;
+import com.nikolaevtsev.mymovies.R;
+import com.nikolaevtsev.mymovies.model.pojo.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -18,6 +18,12 @@ import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private static final int COUNT_FILMS_TO_END_WHERE_START_LOAD = 5;
+
+    private static final int COUNT_MOVIES_ON_PAGE = 20;
+
+    private static final String BASE_IMAGE_URL = "https://image.tmdb.org/t/p/";
+    private static final String SMALL_IMAGE_SIZE = "w185";
+
     private List<Movie> movies;
     private OnPosterClickListener onPosterClickListener;
     private OnReachEndListener onReachEndListener;
@@ -56,11 +62,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         if (isReachEnd(position) && onReachEndListener != null)
             onReachEndListener.onReachEnd();
         Movie movie = movies.get(position);
-        Picasso.get().load(movie.getSmallPosterPath()).into(holder.imageViewSmallPoster);
+        Picasso.get().load(BASE_IMAGE_URL + SMALL_IMAGE_SIZE + movie.getPosterPath()).
+                into(holder.imageViewSmallPoster);
     }
 
     private boolean isReachEnd(int position) {
-        return movies.size() >= JsonUtils.COUNT_MOVIES_ON_PAGE &&
+        Log.i("position", Integer.toString(position));
+        return movies.size() >= COUNT_MOVIES_ON_PAGE &&
                 position > movies.size() - COUNT_FILMS_TO_END_WHERE_START_LOAD;
     }
 
@@ -95,10 +103,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         return movies;
     }
 
-    public void addMovie(Movie movie) {
-        movies.add(movie);
-        notifyDataSetChanged();
-    }
 
     public void clear() {
         movies.clear();

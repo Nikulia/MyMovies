@@ -1,4 +1,4 @@
-package com.release.mymovies.adapters;
+package com.nikolaevtsev.mymovies.view.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,15 +8,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.release.mymovies.R;
-import com.release.mymovies.data.Trailer;
+import com.nikolaevtsev.mymovies.R;
+import com.nikolaevtsev.mymovies.model.pojo.Trailer;
 
-import java.util.ArrayList;
+import java.util.List;
+
 
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerViewHolder> {
 
-    private ArrayList<Trailer> trailers;
+    private List<Trailer> trailers;
     private OnTrailerClickListener onTrailerClickListener;
+
+    private static final String BASE_YOUTUBE_URL = "https://www.youtube.com/watch?v=";
 
     public interface OnTrailerClickListener {
         void onTrailerClick(String url);
@@ -45,7 +48,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
         return trailers.size();
     }
 
-    public void setTrailers(ArrayList<Trailer> trailers) {
+    public void setTrailers(List<Trailer> trailers) {
         this.trailers = trailers;
         notifyDataSetChanged();
     }
@@ -61,7 +64,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.TrailerV
                 @Override
                 public void onClick(View v) {
                     if (onTrailerClickListener != null)
-                        onTrailerClickListener.onTrailerClick(trailers.get(getAdapterPosition()).getPathToTrailer());
+                        onTrailerClickListener.onTrailerClick(BASE_YOUTUBE_URL + trailers.get(getAdapterPosition()).getKey());
                 }
             });
         }

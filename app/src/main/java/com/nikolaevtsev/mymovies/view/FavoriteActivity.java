@@ -1,4 +1,10 @@
-package com.release.mymovies;
+package com.nikolaevtsev.mymovies.view;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,16 +14,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-
-import com.release.mymovies.adapters.MovieAdapter;
-import com.release.mymovies.data.FavoriteMovie;
-import com.release.mymovies.data.MainViewModel;
-import com.release.mymovies.data.Movie;
+import com.nikolaevtsev.mymovies.R;
+import com.nikolaevtsev.mymovies.model.pojo.FavoriteMovie;
+import com.nikolaevtsev.mymovies.model.pojo.Movie;
+import com.nikolaevtsev.mymovies.view.adapters.MovieAdapter;
+import com.nikolaevtsev.mymovies.viewmodel.ListFavoriteMovieViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class FavoriteActivity extends AppCompatActivity {
     public static final int FROM_FAVORITE_ACTIVITY = 1;
     private RecyclerView recyclerViewFavoriteMovies;
     private MovieAdapter adapter;
-    private MainViewModel viewModel;
+    private ListFavoriteMovieViewModel favoriteMovieViewModel;
 
 
     @Override
@@ -36,8 +37,8 @@ public class FavoriteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_favorite);
         recyclerViewFavoriteMovies = findViewById(R.id.recyclerViewFavoriteMovies);
         recyclerViewFavoriteMovies.setLayoutManager(new GridLayoutManager(this, MainActivity.getCountOfColumns(this)));
-        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        LiveData<List<FavoriteMovie>> favoriteMovies = viewModel.getFavoriteMovies();
+        favoriteMovieViewModel = ViewModelProviders.of(this).get(ListFavoriteMovieViewModel.class);
+        LiveData<List<FavoriteMovie>> favoriteMovies = favoriteMovieViewModel.getFavoriteMovies();
         favoriteMovies.observe(this, new Observer<List<FavoriteMovie>>() {
             @Override
             public void onChanged(List<FavoriteMovie> favoriteMovies) {
@@ -55,7 +56,7 @@ public class FavoriteActivity extends AppCompatActivity {
             public void onPosterClick(int position) {
                 Movie movie = adapter.getMovies().get(position);
                 Intent intent = new Intent(FavoriteActivity.this, DetailActivity.class);
-                intent.putExtra(MainActivity.INTENT_MOVIE_ID, movie.getId());
+                intent.putExtra(MainActivity.INTENT_MOVIE_ID, movie.getMovieId());
                 intent.putExtra(MainActivity.INTENT_ACTIVITY_FROM, FROM_FAVORITE_ACTIVITY);
                 startActivity(intent);
             }
